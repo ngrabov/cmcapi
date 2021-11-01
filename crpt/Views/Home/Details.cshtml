@@ -1,0 +1,33 @@
+@model Datum
+@using Microsoft.AspNetCore.Identity
+@using System.Globalization
+@inject SignInManager<Writer> _signInManager
+
+<table class="table table-hover col-sm-4">
+    <tbody>
+        <tr>
+            <td>Name</td>
+            <td>@Model.name</td>
+        </tr>
+        <tr>
+            <td>Symbol</td>
+            <td>@Model.symbol</td>
+        </tr>
+        <tr>
+            <td>CMC rank</td>
+            <td>@Model.cmc_rank</td>
+        </tr>
+        @if(_signInManager.IsSignedIn(User))
+        {
+            <tr>
+                <td>Circulating supply</td>
+                <td>@Model.circulating_supply.ToString("N0", CultureInfo.InvariantCulture)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>All of the data on this page is read from the custom local database, Crypto.db. 
+    Every time the home page is refreshed, the database is updated with data pulled from coinmarketcap.com.
+    Register to see circulating supply.
+</div>

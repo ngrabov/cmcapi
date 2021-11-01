@@ -1,0 +1,61 @@
+﻿@model RootObject
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th style="text-align: right;">Price</th>
+            <th style="text-align: right;">Circulating Supply</th>
+            <th style="text-align: right;">Volume (24h)</th>
+            <th>24h %</th>
+            <th>7d %</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.data)
+        {
+            string col = "", col2 = "";
+            if(item.Quote.USD.percent_change_24h > 0)
+            {
+                col = "#16c784";
+            }
+            else
+            {
+                col = "red";
+            }
+            if(item.Quote.USD.percent_change_7d> 0)
+            {
+                col2 = "#16c784";
+            }
+            else
+            {
+                col2 = "red";
+            }
+            <tr>
+                <td>@item.cmc_rank</td>
+                <td><b><a asp-controller="Home" asp-action="Details" asp-route-name="@item.name">@item.name</a></b> @item.symbol</td>
+                @if(item.Quote.USD.price < 1)
+                {
+                    <td style="text-align: right;">$@item.Quote.USD.price.ToString("N5", CultureInfo.InvariantCulture)</td>
+                }
+                else
+                {
+                    <td style="text-align: right;">$@item.Quote.USD.price.ToString("N2", CultureInfo.InvariantCulture)</td>
+                }
+                <td style="text-align: right;">@item.circulating_supply.ToString("N0", CultureInfo.InvariantCulture) @item.symbol</td>
+                <td style="text-align: right;">$@item.Quote.USD.volume_24h.ToString("N0", CultureInfo.InvariantCulture)</td>
+                <td style="color: @col;"><b>@item.Quote.USD.percent_change_24h.ToString("N2", CultureInfo.InvariantCulture) %</b></td>
+                <td style="color: @col2;"><b>@item.Quote.USD.percent_change_7d.ToString("N2", CultureInfo.InvariantCulture) %</b></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>All of the data on the home page has been extracted from CoinMarketCap's free API (max. 333 requests per day).
+    Click on the name of crypto for a link to its details and further explanation. </div>
